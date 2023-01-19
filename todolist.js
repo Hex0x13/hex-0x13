@@ -1,9 +1,9 @@
 //Model
 let todos = [];
 
-const savedTodos = JSON.parse(localStorage.getItem('todos'));
+//const savedTodos = JSON.parse(localStorage.getItem('todos'));
 
-todos = savedTodos;
+//todos = savedTodos;
 function createTodo(title, dueDate) {
     const id = '' + new Date().getTime();
 
@@ -49,7 +49,7 @@ function updateTodo(todoId, newTitle, newDate) {
 }
 
 function saveTodos() {
-    localStorage.setItem('todos', JSON.stringify(todos));
+ //   localStorage.setItem('todos', JSON.stringify(todos));
 }
 
 //Controller 
