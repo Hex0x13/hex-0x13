@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <title>Todo List</title>
+      <meta name="viewport" content="width=device-width=initial-scale=1.0">
+      <link rel="stylesheet" href="./todolist.css">
+      <script src="./todolist.js" defer>
+      </script>
+    </head>
+    <body>
+        <header class="header">
+        
+            
+            <div class="input-to-do">
+                <input Id="todo-title" type="text" placeholder="Input title">
+            </div>
+            
+            <div class="due-date-container">
+              <input Id="datePicker" type="date">
+            </div>
+
+            <div class="add-box" onclick="addTodo()">
+                <button class="add-button">Add</button>
+            </div>
+            
+        </header>
+        
+        <section>
+          <div Id="todo-list"></div>
+        </section>
+    </body>
+</html>	
