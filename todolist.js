@@ -1,21 +1,17 @@
-//Model
+
 let todos = [];
 
-//const savedTodos = JSON.parse(localStorage.getItem('todos'));
-
-//todos = savedTodos;
 function createTodo(title, dueDate) {
     const id = '' + new Date().getTime();
 
     todos.push({ title: title, dueDate: dueDate, id: id });
 
-    saveTodos();
 }
 
 function removeTodo(idToDelete) {
     todos = todos.filter(todo => todo.id !== idToDelete);
 
-    saveTodos();
+
 }
 
 function toggleTodo(todoId, checked) {
@@ -25,7 +21,6 @@ function toggleTodo(todoId, checked) {
         }
     });
 
-    saveTodos();
 }
 
 function setEditing(todoId) {
@@ -34,7 +29,7 @@ function setEditing(todoId) {
             todo.isEditing = true;
         }
     });
-    saveTodos();
+
 }
 
 function updateTodo(todoId, newTitle, newDate) {
@@ -45,14 +40,18 @@ function updateTodo(todoId, newTitle, newDate) {
             todo.isEditing = false;
         }
     });
-    saveTodos();
+
 }
 
-function saveTodos() {
- //   localStorage.setItem('todos', JSON.stringify(todos));
+function setCancel(todoId) {
+    todos.forEach(todo => {
+        if (todo.id === todoId) {
+            todo.isEditing = false;
+        }
+    });
 }
 
-//Controller 
+
 function addTodo() {
     const textbox = document.getElementById('todo-title');
     const title = textbox.value;
@@ -63,6 +62,7 @@ function addTodo() {
 
     const datePicker = document.getElementById('datePicker');
     const dueDate = datePicker.value;
+    textbox.value = '';
 
     createTodo(title, dueDate);
     render();
@@ -120,34 +120,40 @@ function onCancelling(event){
     render();
 }
 
-function setCancel(todoId){
-    todos.forEach(todo => {
-        if(todo.id === todoId){
-            todo.isEditing = false;
-        }
-    });
-    saveTodos();
-}
 
-//View
 function render() {
     document.getElementById('todo-list').innerHTML = '';
     todos.forEach(todo => {
         const element = document.createElement('div');
         element.className = 'elements';
 
+        const spanDate = document.createElement('span');
+        spanDate.className = 'date-style';
+        spanDate.innerText = todo.dueDate;
+
         if(todo.isEditing === true){
+            element.style = 'grid-template-columns: 30px 1fr 16% 80px;';
+
+            const cancelButton = document.createElement('button');
+            cancelButton.innerText = 'x';
+            cancelButton.className = 'cancelEdit';
+            cancelButton.dataset.todoId = todo.id;
+            cancelButton.onclick = onCancelling;
+            element.prepend(cancelButton);
+            
             const textbox = document.createElement('input');
             textbox.type = 'text';
             textbox.placeholder = 'Edit title';
             textbox.className = 'textboxEditor';
             textbox.id = 'edit-title-' + todo.id;
+            textbox.value = todo.title;
             element.appendChild(textbox);
 
             const datePicker = document.createElement('input');
             datePicker.type = 'date';
             datePicker.className = 'dateEdit';
             datePicker.id = 'edit-date-' + todo.id;
+            datePicker.value = todo.dueDate;
             element.appendChild(datePicker);
 
             const updateButton = document.createElement('button');
@@ -157,20 +163,14 @@ function render() {
             updateButton.onclick = onUpdate;
             element.appendChild(updateButton);
 
-            const cancelButton = document.createElement('button');
-            cancelButton.innerText = 'Cancel';
-            cancelButton.className = 'cancelEdit';
-            cancelButton.dataset.todoId = todo.id;
-            cancelButton.onclick = onCancelling;
-            element.appendChild(cancelButton);
-
             const todoList = document.getElementById('todo-list');
             todoList.appendChild(element);
 
             return;
         }
 
-        element.innerText = todo.title + ' ' + todo.dueDate;
+        element.innerText = todo.title;
+        element.style = 'grid-template-columns: 30px 1fr 50px 40px;';
 
         const checkBox = document.createElement('input');
         checkBox.type = 'checkbox';
@@ -196,6 +196,7 @@ function render() {
         element.appendChild(deleteButton);
 
         const todoList = document.getElementById('todo-list');
+        element.appendChild(spanDate);
         todoList.appendChild(element);
 
     });
